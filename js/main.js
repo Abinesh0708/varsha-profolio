@@ -130,10 +130,12 @@ if (skillsSection) {
 // Form Submission Handler
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
-    // Initialize EmailJS with your public key
-    emailjs.init("YOUR_PUBLIC_KEY"); // You'll need to replace this with your actual public key
+    // Initialize EmailJS
+    (function() {
+        emailjs.init("dy0j9P4GoZMBKIZT9");
+    })();
 
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
         // Show loading state
@@ -143,21 +145,23 @@ if (contactForm) {
         submitButton.disabled = true;
 
         // Get form data
-        const formData = {
-            user_name: contactForm.querySelector('[name="user_name"]').value,
-            user_email: contactForm.querySelector('[name="user_email"]').value,
+        const templateParams = {
+            from_name: contactForm.querySelector('[name="user_name"]').value,
+            from_email: contactForm.querySelector('[name="user_email"]').value,
             message: contactForm.querySelector('[name="message"]').value,
-            to_email: 'abineshk2m@gmail.com' // Your Gmail address
+            to_name: 'Varsha',
+            to_email: 'abineshk2m@gmail.com'
         };
 
         // Send email using EmailJS
-        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData)
+        emailjs.send('service_a7ociut', 'template_kw9lrgg', templateParams)
             .then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
                 alert('Thank you for your message! I will get back to you soon.');
                 contactForm.reset();
             }, function(error) {
+                console.log('FAILED...', error);
                 alert('Sorry, there was an error sending your message. Please try again later.');
-                console.error('EmailJS Error:', error);
             })
             .finally(() => {
                 // Reset button state
