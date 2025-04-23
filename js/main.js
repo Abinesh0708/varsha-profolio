@@ -130,11 +130,40 @@ if (skillsSection) {
 // Form Submission Handler
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
+    // Initialize EmailJS with your public key
+    emailjs.init("YOUR_PUBLIC_KEY"); // You'll need to replace this with your actual public key
+
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        // Add your form submission logic here
-        alert('Thank you for your message! I will get back to you soon.');
-        contactForm.reset();
+        
+        // Show loading state
+        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.innerHTML;
+        submitButton.innerHTML = 'Sending...';
+        submitButton.disabled = true;
+
+        // Get form data
+        const formData = {
+            user_name: contactForm.querySelector('[name="user_name"]').value,
+            user_email: contactForm.querySelector('[name="user_email"]').value,
+            message: contactForm.querySelector('[name="message"]').value,
+            to_email: 'abineshk2m@gmail.com' // Your Gmail address
+        };
+
+        // Send email using EmailJS
+        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData)
+            .then(function(response) {
+                alert('Thank you for your message! I will get back to you soon.');
+                contactForm.reset();
+            }, function(error) {
+                alert('Sorry, there was an error sending your message. Please try again later.');
+                console.error('EmailJS Error:', error);
+            })
+            .finally(() => {
+                // Reset button state
+                submitButton.innerHTML = originalButtonText;
+                submitButton.disabled = false;
+            });
     });
 }
 
